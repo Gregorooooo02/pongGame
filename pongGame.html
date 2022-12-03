@@ -5,13 +5,16 @@
     <title>Pong with SVG</title>
     <script type="text/javascript" src="pongScript.js"></script>
 </head>
-<body>
-  <svg id="field" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+<body onload="svgPong()">
+  <svg id="field"
+       xmlns="http://www.w3.org/2000/svg"
+       viewBox="0 0 800 600"
+       preserveAspectRatio="xMidYMid">
     <style>
       .score {
         text-anchor: middle;
-        font-family: "Pixel Operator Mono",monospace;
-        font-size: 30px;
+        font-family: "Pixel Operator Mono", monospace;
+        font-size: 36px;
       }
 
       #field {
@@ -22,6 +25,8 @@
         position : absolute;
         display: inline-block;
       }
+
+
     </style>
 
     <rect id="background"
@@ -48,11 +53,11 @@
     <rect id="paddleLeft"
           width="20" height="100"
           x="10" y="240"
-          fill="#FFF"/>
+          fill="#D633FF"/>
     <rect id="paddleRight"
           width="20" height="100"
           x="770" y="240"
-          fill="#FFF"/>
+          fill="#33EEFF"/>
 
     <circle id="ball"
             r="10"
