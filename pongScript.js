@@ -1,5 +1,5 @@
 svgPong = function () {
-     var field = document.getElementById('field');
+    let field = document.getElementById('field');
 
     if (field == null) {
         alert("!!!Could not find SVG graphic file!!!");
@@ -7,20 +7,12 @@ svgPong = function () {
     }
 
     (function() {
-            var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-                window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-            window.requestAnimationFrame = requestAnimationFrame;
+        window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
     })();
 
-
-    /** Wrap SVG elements for easier accessing.
-     *
-     * @param name Name of the SVG object
-     * @returns {{}}
-     */
     function wrapPaddle(name) {
-        var e = document.getElementById(name)
-        var r = {}
+        let e = document.getElementById(name)
+        let r = {}
 
         r.width = e.width.baseVal.value
         r.height = e.height.baseVal.value
@@ -54,14 +46,14 @@ svgPong = function () {
         return r;
     }
 
-    var player = wrapPaddle('paddleLeft')
+    let player = wrapPaddle('paddleLeft')
     //var player2 = wrapPaddle('paddleRight')
-    var computer = wrapPaddle('paddleRight')
+    let computer = wrapPaddle('paddleRight')
 
-    var ball = function () {
-        var e = document.getElementById('ball')
+    let ball = function () {
+        let e = document.getElementById('ball')
 
-        var r = {}
+        let r = {}
         r.dx = 0
         r.dy = 0
 
@@ -90,22 +82,22 @@ svgPong = function () {
         return r;
     }();
 
-    var playerScore = document.getElementById('playerScore')
-    var computerScore = document.getElementById('computerScore')
+    let playerScore = document.getElementById('playerScore')
+    let computerScore = document.getElementById('computerScore')
 
-    var box = field.viewBox.baseVal;
+    let box = field.viewBox.baseVal;
 
     // Initial ball state vector init
-    var startX = box.width / 2;
-    var startY = box.height / 2;
+    let startX = box.width / 2;
+    let startY = box.height / 2;
 
-    var clock = function () {
-        var last = Date.now();
+    let clock = function () {
+        let last = Date.now();
 
         return {
             'reset': function () {
-                var now = Date.now();
-                var result = now - last;
+                let now = Date.now();
+                let result = now - last;
                 last = now;
 
                 return result;
@@ -113,17 +105,16 @@ svgPong = function () {
         }
     }()
 
-    var animationSpeed = 0.1; // Pixel per ms
-    var computerSpeed = 7;
+    let animationSpeed = 0.1; // Pixel per ms
+    let computerSpeed = 4;
 
-    var scorePlayer = 0;
-    var scoreComputer = 0;
+    let scorePlayer = 0;
+    let scoreComputer = 0;
 
-    var inputY = 0;
+    let inputY = 0;
 
-    var verticalCenter = box.height / 2;
-    var horizontalCenter = box.width / 2;
-    var deflectFactor = 0.1;
+    let verticalCenter = box.height / 2;
+    let deflectFactor = 0.1;
 
     function collideBallWith(what) {
         if (ball.bottom < what.top || ball.top > what.bottom) {
@@ -131,7 +122,7 @@ svgPong = function () {
             return;
         }
 
-        var voff = ball.cy - what.cy
+        let voff = ball.cy - what.cy
 
         if (ball.dx < 0) {
 
@@ -178,39 +169,61 @@ svgPong = function () {
 
             ball.dy = 5 - Math.random() * 10
         }, 3000);
+
+        if (scorePlayer === 5) {
+            alert("YOU WON");
+            document.location.reload();
+        }
+
+        if (scoreComputer === 5) {
+            alert("GAME OVER");
+            document.location.reload();
+        }
     }
 
     // Setup
     scored();
 
-    var animate = function () {
-        var suspense = field.suspendRedraw(6000);
+    let animate = function () {
+        let suspense = field.suspendRedraw(6000);
 
-        var animationFactor = clock.reset() * animationSpeed
+        let animationFactor = clock.reset() * animationSpeed
 
         ball.cx += ball.dx * animationFactor;
         ball.cy += ball.dy * animationFactor;
 
         // Player movement
         player.cy = inputY;
+
+        // Test player as computer
+        //let offset1;
+        //let motivation1;
+
+        //if (ball.dx < 0) {
+        //    offset1 = ball.cy - player.cy
+        //    motivation1 = Math.min(1, Math.pow(Math.abs(offset1) / (player.height / 4), 2))
+        //} else {
+        //    offset1 = verticalCenter - player.cy
+        //    motivation1 = Math.abs(offset1) > verticalCenter / 4 ? 0.5 : 0
+        //}
+
+        //if (offset1 > 0) {
+        //    player.cy += computerSpeed * animationFactor * motivation1
+        //}
+        //else {
+        //    player.cy -= computerSpeed * animationFactor * motivation1
+        //}
+        // end of definition
         boundPaddle(player)
 
-        // Ball color change
-        var ballColor = function () {
-            if (ball.dx > 0 && ball.dx < box.width / 2) {
-                ball.fill('#33EEFF');
-            }
-            else {
-                ball.fill('#D633FF');
-            }
-        }
-
         // Computer AI
+        let offset;
+        let motivation;
+
         if (ball.dx > 0) {
-            var offset = ball.cy - computer.cy
-            var motivation = Math.min(1, Math.pow(Math.abs(offset) / (computer.height / 4), 2))
-        }
-        else {
+            offset = ball.cy - computer.cy
+            motivation = Math.min(1, Math.pow(Math.abs(offset) / (computer.height / 4), 2))
+        } else {
             offset = verticalCenter - computer.cy
             motivation = Math.abs(offset) > verticalCenter / 4 ? 0.5 : 0
         }
@@ -261,15 +274,15 @@ svgPong = function () {
         requestAnimationFrame(animate);
     }
 
-    var matrix = field.getScreenCTM().inverse();
+    let matrix = field.getScreenCTM().inverse();
 
     field.addEventListener("mousemove", function (event) {
         event.preventDefault()
 
-        var p = field.createSVGPoint()
+        let p = field.createSVGPoint()
         p.x = event.clientX
         p.y = event.clientY
-        var inSVG = p.matrixTransform(matrix)
+        let inSVG = p.matrixTransform(matrix)
 
         inputY = inSVG.y
     })

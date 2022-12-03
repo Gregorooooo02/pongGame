@@ -26,7 +26,6 @@
         display: inline-block;
       }
 
-
     </style>
 
     <rect id="background"
@@ -52,17 +51,57 @@
 
     <rect id="paddleLeft"
           width="20" height="100"
-          x="10" y="240"
-          fill="#D633FF"/>
+          x="10" y="240" rx="5"
+          fill="#D633FF"
+          filter="url(#softGlowPlayer)"/>
+
     <rect id="paddleRight"
           width="20" height="100"
-          x="770" y="240"
-          fill="#33EEFF"/>
+          x="770" y="240" rx="5"
+          fill="#33EEFF"
+          filter="url(#softGlowComputer)"/>
 
     <circle id="ball"
             r="10"
             cx="400" cy="300"
             fill="#FFF"/>
+
+    <filter id="softGlowPlayer"
+            height="300%" width="300%"
+            x="-75%" y="-75%">
+      <feMorphology operator="dilate" radius="4" in="SourceAlpha" result="thicken"/>
+
+      <feGaussianBlur in="thicken" stdDeviation="7" result="blurred"/>
+
+      <feFlood flood-color="#D633FF" result="glowColor"/>
+
+      <feComposite in="glowColor" in2="blurred" operator="in" result="softGlow_colored"/>
+
+      <feMerge>
+        <feMergeNode in="softGlow_colored"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+
+    </filter>
+
+    <filter id="softGlowComputer"
+            height="300%" width="300%"
+            x="-75%" y="-75%">
+      <feMorphology operator="dilate" radius="4" in="SourceAlpha" result="thicken"/>
+
+      <feGaussianBlur in="thicken" stdDeviation="7" result="blurred"/>
+
+      <feFlood flood-color="#33EEFF" result="glowColor"/>
+
+      <feComposite in="glowColor" in2="blurred" operator="in" result="softGlow_colored"/>
+
+      <feMerge>
+        <feMergeNode in="softGlow_colored"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+
+    </filter>
+
   </svg>
 </body>
 </html>
