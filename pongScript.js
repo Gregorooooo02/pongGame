@@ -10,6 +10,7 @@ svgPong = function () {
         window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
     })();
 
+    // Initial paddle
     function wrapPaddle(name) {
         let e = document.getElementById(name)
         let r = {}
@@ -46,10 +47,11 @@ svgPong = function () {
         return r;
     }
 
+    // Create objects for paddles
     let player = wrapPaddle('paddleLeft')
-    //var player2 = wrapPaddle('paddleRight')
     let computer = wrapPaddle('paddleRight')
 
+    // Creating a ball and it's methods
     let ball = function () {
         let e = document.getElementById('ball')
 
@@ -82,6 +84,7 @@ svgPong = function () {
         return r;
     }();
 
+    // Player's and Computer's score
     let playerScore = document.getElementById('playerScore')
     let computerScore = document.getElementById('computerScore')
 
@@ -105,17 +108,21 @@ svgPong = function () {
         }
     }()
 
-    let animationSpeed = 0.1; // Pixel per ms
-    let computerSpeed = 4;
+    let animationSpeed = 0.1;   // Pixel per ms
+    let computerSpeed = 4;      // Difficulty of the computer
 
-    let scorePlayer = 0;
-    let scoreComputer = 0;
+    let scorePlayer = 0;        // Player score (Int type)
+    let scoreComputer = 0;      // Computer score (Int type)
 
-    let inputY = 0;
+    let inputY = 0;             // Input in Y axis for moving the player
 
     let verticalCenter = box.height / 2;
     let deflectFactor = 0.1;
 
+    /** Collider function, makes ball bounce of smt.
+     *
+     * @param what From what should the ball bounce off
+     */
     function collideBallWith(what) {
         if (ball.bottom < what.top || ball.top > what.bottom) {
             // There's no collision
@@ -145,6 +152,10 @@ svgPong = function () {
         }
     }
 
+    /** Creates a bound for the paddle.
+     *
+     * @param paddle Which paddle should have bounds
+     */
     function boundPaddle(paddle) {
         if (paddle.bottom > box.height) {
             paddle.y = box.height - paddle.height
@@ -154,6 +165,9 @@ svgPong = function () {
         }
     }
 
+    /** Makes score system work fine ;)
+     *
+     */
     function scored() {
         ball.dx = 0;
         ball.dy = 0;
@@ -184,6 +198,9 @@ svgPong = function () {
     // Setup
     scored();
 
+    /** Init animations for the game
+     *
+     */
     let animate = function () {
         let suspense = field.suspendRedraw(6000);
 
@@ -196,23 +213,23 @@ svgPong = function () {
         player.cy = inputY;
 
         // Test player as computer
-        //let offset1;
-        //let motivation1;
-
-        //if (ball.dx < 0) {
+        // let offset1;
+        // let motivation1;
+        //
+        // if (ball.dx < 0) {
         //    offset1 = ball.cy - player.cy
         //    motivation1 = Math.min(1, Math.pow(Math.abs(offset1) / (player.height / 4), 2))
-        //} else {
+        // } else {
         //    offset1 = verticalCenter - player.cy
         //    motivation1 = Math.abs(offset1) > verticalCenter / 4 ? 0.5 : 0
-        //}
-
-        //if (offset1 > 0) {
+        // }
+        //
+        // if (offset1 > 0) {
         //    player.cy += computerSpeed * animationFactor * motivation1
-        //}
-        //else {
+        // }
+        // else {
         //    player.cy -= computerSpeed * animationFactor * motivation1
-        //}
+        // }
         // end of definition
         boundPaddle(player)
 
@@ -276,6 +293,7 @@ svgPong = function () {
 
     let matrix = field.getScreenCTM().inverse();
 
+    // Controls for the player
     field.addEventListener("mousemove", function (event) {
         event.preventDefault()
 
@@ -286,10 +304,6 @@ svgPong = function () {
 
         inputY = inSVG.y
     })
-
-    window.onresize = function () {
-        matrix = field.getScreenCTM().inverse()
-    }
 
     // Start animation
     requestAnimationFrame(animate)
